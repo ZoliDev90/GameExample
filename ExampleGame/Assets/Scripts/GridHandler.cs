@@ -14,7 +14,7 @@ public class GridHandler : MonoBehaviour
     private List<GameObject> cards = new List<GameObject>();
     private ScreenOrientation currentOrientation;
     private Transform backgroundTable;
-
+    private Dictionary<int, Sprite> imageDictionary;
     void Start()
     {
         backgroundTable = transform.GetChild(0);
@@ -41,6 +41,7 @@ public class GridHandler : MonoBehaviour
             columns = thinner;
         }
 
+        LoadCardImages();
         setupGrid();
     }
 
@@ -60,6 +61,7 @@ public class GridHandler : MonoBehaviour
         ClearGrid();
         GenerateGrid(rows, columns);
         AdjustCameraAndCardSize(rows, columns);
+        AssignImagesToCards();
     }
 
     public void GenerateGrid(int rows, int columns)
@@ -152,6 +154,74 @@ public class GridHandler : MonoBehaviour
         setupGrid();
     }
 
+    void LoadCardImages()
+    {
+        // Load all images from the Resources folder
+        Sprite[] loadedImages = Resources.LoadAll<Sprite>("Textures/Cards");
+        imageDictionary = new Dictionary<int, Sprite>();
 
+        // Create a dictionary from the images with unique keys. These uniqe keys will serve as IDs for the cards.
+        for (int i = 0; i < loadedImages.Length; i++)
+        {
+            imageDictionary.Add(i, loadedImages[i]);
+        }
+
+    }
+
+
+    void AssignImagesToCards() // randomly assign images to the cards 
+    {
+        int totalCards = rows * columns;
+
+        List<int> imageKeys = new List<int>();
+
+        // Randomly select images to fill all card slots
+        for (int i = 0; i < totalCards / 2; i++)
+        {
+            int randomKey = Random.Range(0, imageDictionary.Count);
+            imageKeys.Add(randomKey);
+            imageKeys.Add(randomKey);
+        }
+
+        // Shuffle the pair keys
+        ShuffleList(imageKeys);
+
+        // Assign images to cards
+        for (int i = 0; i < cards.Count; i++)
+        {
+            int imageKey = imageKeys[i];
+            Sprite assignedImage = imageDictionary[imageKey];
+
+            // Set the texture on the card's front face
+            Transform frontFace = cards[i].transform.Find("Front");
+            if (frontFace != null)
+            {
+                Renderer renderer = frontFace.GetComponent<Renderer>();
+                if (renderer != null)
+                {
+                    renderer.material.mainTexture = assignedImage.texture;
+                }
+            }
+
+            // Assign the ID to the card for matching logic
+            Card cardComponent = cards[i].GetComponent<Card>();
+            if (cardComponent != null)
+            {
+                cardComponent.id = imageKey;
+            }
+        }
+    }
+
+
+    void ShuffleList<T>(List<T> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            int randomIndex = Random.Range(0, list.Count);
+            T temp = list[i];
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
+        }
+    }
 
 }

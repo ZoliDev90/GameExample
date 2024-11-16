@@ -5,6 +5,7 @@ using UnityEngine;
 public class CardHandler : MonoBehaviour
 {
     private Queue<Card> flippedCards = new Queue<Card>();
+    public GameObject particles;
 
 
     void Update()
@@ -59,6 +60,8 @@ public class CardHandler : MonoBehaviour
         {
             // Match found
             Debug.Log("Match!");
+            Instantiate(particles, firstCard.transform.position + Vector3.up, firstCard.transform.rotation);
+            Instantiate(particles, secondCard.transform.position + Vector3.up, secondCard.transform.rotation);
             Destroy(firstCard.gameObject);
             Destroy(secondCard.gameObject);
 
