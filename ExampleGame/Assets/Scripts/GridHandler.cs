@@ -15,16 +15,39 @@ public class GridHandler : MonoBehaviour
     private ScreenOrientation currentOrientation;
     private Transform backgroundTable;
     private Dictionary<int, Sprite> imageDictionary;
+
+    [SerializeField] private CardHandler cardHandler;
+
     void Start()
     {
         backgroundTable = transform.GetChild(0);
         currentOrientation = Screen.orientation;
 
-        int wider = Mathf.Max(rows, columns);
-        int thinner = Mathf.Min(rows, columns);
+
+
+        LoadCardImages();
+        setupGrid(rows, columns);
+    }
+
+    void Update()
+    {
+        // Check for orientation changes and adjust camera and cards to fit within the screen
+        if (currentOrientation != Screen.orientation)
+        {
+            currentOrientation = Screen.orientation;
+            AdjustCameraAndCardSize();
+        }
+    }
+
+    
+    public void setupGrid(int gridRows, int gridColumns)
+    {
+
+        int wider = Mathf.Max(gridRows, gridColumns);
+        int thinner = Mathf.Min(gridRows, gridColumns);
 
         // rows * columns must be even because of the card matching
-        if ((rows * columns) % 2 == 1)
+        if ((gridRows * gridColumns) % 2 == 1)
         {
             thinner += 1;
         }
@@ -41,30 +64,13 @@ public class GridHandler : MonoBehaviour
             columns = thinner;
         }
 
-        LoadCardImages();
-        setupGrid();
-    }
-
-    void Update()
-    {
-        // Check for orientation changes and adjust camera and cards to fit within the screen
-        if (currentOrientation != Screen.orientation)
-        {
-            currentOrientation = Screen.orientation;
-            AdjustCameraAndCardSize(rows, columns);
-        }
-    }
-
-
-    public void setupGrid()
-    {
         ClearGrid();
-        GenerateGrid(rows, columns);
-        AdjustCameraAndCardSize(rows, columns);
+        GenerateGrid();
+        AdjustCameraAndCardSize();
         AssignImagesToCards();
     }
 
-    public void GenerateGrid(int rows, int columns)
+    public void GenerateGrid()
     {
         float gridWidth, gridHeight;
         CalculateGridDimensions(out gridWidth, out gridHeight, rows, columns);
@@ -100,6 +106,7 @@ public class GridHandler : MonoBehaviour
 
     private void ClearGrid()
     {
+        cardHandler.clearCardQueue();
         foreach (GameObject card in cards)
         {
             Destroy(card);
@@ -109,7 +116,7 @@ public class GridHandler : MonoBehaviour
 
 
 
-    private void AdjustCameraAndCardSize(int rows, int columns)
+    private void AdjustCameraAndCardSize()
     {
         Camera mainCamera = Camera.main;
 
@@ -147,12 +154,12 @@ public class GridHandler : MonoBehaviour
         gridHeight = (rows * cardHeight) + (spacing * (rows - 1));
     }
 
-    public void UpdateGridSize(int newRows, int newColumns)
-    {
-        rows = newRows;
-        columns = newColumns;
-        setupGrid();
-    }
+    //public void UpdateGridSize(int newRows, int newColumns)
+    //{
+    //    rows = newRows;
+    //    columns = newColumns;
+    //    setupGrid();
+    //}
 
     void LoadCardImages()
     {

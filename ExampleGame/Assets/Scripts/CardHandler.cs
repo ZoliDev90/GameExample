@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+
 
 public class CardHandler : MonoBehaviour
 {
@@ -10,6 +12,9 @@ public class CardHandler : MonoBehaviour
 
     void Update()
     {
+        // to block raycasting when the pointer is over UI element
+        if (EventSystem.current.IsPointerOverGameObject()) return;
+
         // Handle input for both desktop and mobile
         if (Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
         {
@@ -50,6 +55,7 @@ public class CardHandler : MonoBehaviour
         var firstCard = flippedCards.Dequeue();
         var secondCard = flippedCards.Dequeue();
 
+
         if (firstCard.id != secondCard.id)
         {
             // No match, flip back
@@ -66,5 +72,11 @@ public class CardHandler : MonoBehaviour
             Destroy(secondCard.gameObject);
 
         }
+    }
+
+
+    public void clearCardQueue()
+    {
+        flippedCards.Clear();
     }
 }

@@ -49,4 +49,10 @@ public class Card : MonoBehaviour
         transform.eulerAngles = endRotation;
     }
 
+
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
+    }
+
 }
