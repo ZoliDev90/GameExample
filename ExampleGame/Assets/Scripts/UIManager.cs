@@ -36,34 +36,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void onPauseButtonClick()
-    {
-        pausePanel.SetActive(true);
-        GameManager.Instance.PauseTimer();
-
-    }
-
-    public void onStartButtonClick()
-    {
-        paramPanel.SetActive(true);
-        startPanel.SetActive(false);
-
-    }
-
-    public void onLoadButtonClick()
-    {
-
-
-    }
-
-    public void onQuitButtonClick()
-    {
-        Debug.Log("Quit game requested.");
-        Application.Quit();
-    }
-
-
-    public void OnOkButtonClick()
+    public void OnOkButtonClick() // This starts the game after it reads out the grid sizes
     {
         // Read grid values from the input fields
         if (heightInput.text != string.Empty && widthInput.text != string.Empty)
@@ -76,6 +49,8 @@ public class UIManager : MonoBehaviour
             //Start the game
             if (check1 && check2)
             {
+
+                GameManager.Instance.ResetParameters();
                 GameManager.Instance.StartTimer();
                 paramPanel.SetActive(false);
                 pauseButton.SetActive(true);
@@ -91,6 +66,51 @@ public class UIManager : MonoBehaviour
             Debug.LogError("Input field is empty or not assigned.");
         }
 
+    }
+
+    public void onPauseButtonClick()
+    {
+        pauseButton.SetActive(false);
+        pausePanel.SetActive(true);
+        GameManager.Instance.PauseTimer();
+
+    }
+
+    public void onStartButtonClick()
+    {
+        paramPanel.SetActive(true);
+        startPanel.SetActive(false);
+
+    }
+
+    public void onLoadButtonClick()
+    {
+
+    }
+
+    public void onSaveButtonClick()
+    {
+
+
+    }
+
+    public void onQuitButtonClick()
+    {
+        Debug.Log("Quit game requested.");
+        Application.Quit();
+    }
+
+    public void onResumeButtonClick()
+    {
+        pauseButton.SetActive(true);
+        pausePanel.SetActive(false);
+        GameManager.Instance.StartTimer();
+    }
+
+    public void onRestartButtonClick()
+    {
+        paramPanel.SetActive(true);
+        pausePanel.SetActive(false);
     }
 
     public void UpdateScoreDisplay(int score)
@@ -125,8 +145,6 @@ public class UIManager : MonoBehaviour
     {
         int minutes = (int)(timeInSeconds / 60);
         int seconds = (int)(timeInSeconds % 60);
-        //int milliseconds = (int)((timeInSeconds - (int)timeInSeconds) * 1000);
-        //return string.Format("{0:00}:{1:00}:{2:000}", minutes, seconds, milliseconds);
         return string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 }
