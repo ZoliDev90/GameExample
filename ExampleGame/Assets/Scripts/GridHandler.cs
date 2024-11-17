@@ -148,7 +148,7 @@ public class GridHandler : MonoBehaviour
         // Ensure camera orthographic size fits the height
         mainCamera.orthographicSize = Mathf.Max(totalGridHeight / 2f, (totalGridWidth / mainCamera.aspect) / 2f);
         // Ensure the background is big enough to cover the camera view
-        backgroundTable.localScale = new Vector3(mainCamera.orthographicSize / 2f, mainCamera.orthographicSize / 2f, mainCamera.orthographicSize / 2f);
+        backgroundTable.localScale = new Vector3(mainCamera.orthographicSize / 2f, 1f, mainCamera.orthographicSize / 2f);
         // Adjust card sizes to fit within grid cells
         float cardWidth = (gridWidth / columns) - (spacing * (columns - 1) / columns);
         float cardHeight = (gridHeight / rows) - (spacing * (rows - 1) / rows);
