@@ -83,6 +83,8 @@ public class GameManager : MonoBehaviour
             int point = baseReward * hitsInRow;
             UIManager.Instance.ShowScorePopup($"{hitsInRow}X Combo +{point}", position, Color.magenta);
             UpdateScore(point);
+            SoundManager.Instance.PlaySound(SoundManager.SoundAction.Bonus);
+
         }
         else
         {
@@ -103,6 +105,8 @@ public class GameManager : MonoBehaviour
             int point = baseReward / 2;
             UIManager.Instance.ShowScorePopup($"-{point}", position, Color.red);
             UpdateScore(-point);
+            SoundManager.Instance.PlaySound(SoundManager.SoundAction.Penalty);
+
         }
     }
 
@@ -127,9 +131,6 @@ public class GameManager : MonoBehaviour
         hitsInRow += 1;
         mishitsInRow = 0;
     }
-    //public void resetMishitInRow() { mishitsInRow = 0; }
-    //public void resetHitsInRow() { hitsInRow = 0; }
-
 
 
     public void SaveGame(int rows, int columns)
@@ -182,6 +183,14 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
+
+    public void WinGame()
+    {
+        PauseTimer();
+        SoundManager.Instance.PlaySound(SoundManager.SoundAction.Win);
+        UIManager.Instance.GoToMainMenu();
+
+    }
 
 }
 

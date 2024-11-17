@@ -48,6 +48,7 @@ public class GridHandler : MonoBehaviour
         if ((gridRows * gridColumns) % 2 == 1)
         {
             thinner += 1;
+            Debug.Log("The smaller grid dimension is increased by one in order to get even card number");
         }
 
         // the bigger grid parameter is used for the wider screen dimension for better fitting
@@ -73,7 +74,7 @@ public class GridHandler : MonoBehaviour
         rows = gridRows;
         columns = gridColumns;
         ClearGrid();
-
+        AdjustCameraAndCardSize();
         //Instantiate and put the cards to the saved positions
         for (int i = 0; i < cardPositions.Count; i++)
         {
@@ -83,7 +84,7 @@ public class GridHandler : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
 
         }
-        AdjustCameraAndCardSize();
+        
         AssignImagesToCards();
     }
 
@@ -246,6 +247,12 @@ public class GridHandler : MonoBehaviour
             list[i] = list[randomIndex];
             list[randomIndex] = temp;
         }
+    }
+
+
+    public List<GameObject> getCards()
+    {
+        return cards;
     }
 
 }

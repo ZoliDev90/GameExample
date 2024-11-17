@@ -23,6 +23,16 @@ public class Card : MonoBehaviour
             isFlipped = !isFlipped;
             float angle = isFlipped ? 180f : 0f;
             StartCoroutine(FlipAnimation(angle));
+
+            if (!isFlipped)
+            {
+                SoundManager.Instance.PlaySound(SoundManager.SoundAction.Flip);
+            }
+            else
+            {
+                SoundManager.Instance.PlaySound(SoundManager.SoundAction.Backflip);
+
+            }
         }
 
     }

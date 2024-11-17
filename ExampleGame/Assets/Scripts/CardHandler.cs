@@ -9,6 +9,8 @@ public class CardHandler : MonoBehaviour
     private Queue<Card> flippedCards = new Queue<Card>();
     public GameObject particles;
 
+    [SerializeField] private GridHandler gridHandler;
+
 
     void Update()
     {
@@ -65,6 +67,8 @@ public class CardHandler : MonoBehaviour
         if (firstCard.id != secondCard.id)
         {
             GameManager.Instance.addMishitInRow(); // used for penalty
+
+            SoundManager.Instance.PlaySound(SoundManager.SoundAction.Mismatch);
             // No match, flip back
             firstCard.Flip();
             secondCard.Flip();
@@ -72,6 +76,7 @@ public class CardHandler : MonoBehaviour
         else
         {
             // Match found
+            SoundManager.Instance.PlaySound(SoundManager.SoundAction.Match);
 
             GameManager.Instance.addHitsInRow(); // used for combo bonus
             Debug.Log("Match!");
@@ -82,14 +87,24 @@ public class CardHandler : MonoBehaviour
             Instantiate(particles, firstCard.transform.position + Vector3.up, firstCard.transform.rotation);
             Instantiate(particles, secondCard.transform.position + Vector3.up, secondCard.transform.rotation);
             //destroy the cards if they matched
-            Destroy(firstCard.gameObject);
-            Destroy(secondCard.gameObject);
+            DestroyCard(firstCard.gameObject);
+            DestroyCard(secondCard.gameObject);
 
         }
 
         GameManager.Instance.UpdateTurnCount(screenPosition);
     }
 
+    private void DestroyCard(GameObject card)
+    {
+        gridHandler.getCards().Remove(card);  // This removes the reference from the list
+        Destroy(card);
+        
+        if (gridHandler.getCards().Count == 0)
+        {
+            GameManager.Instance.WinGame();
+        }
+    }
 
     public void clearCardQueue()
     {

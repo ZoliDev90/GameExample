@@ -57,6 +57,8 @@ public class UIManager : MonoBehaviour
                 paramPanel.SetActive(false);
                 pauseButton.SetActive(true);
                 gridHandler.SetupGrid(gridWidth, gridHeight);
+                SoundManager.Instance.PlaySound(SoundManager.SoundAction.GameStart);
+
             }
             else
             {
@@ -80,8 +82,21 @@ public class UIManager : MonoBehaviour
 
     public void OnStartButtonClick()
     {
-        paramPanel.SetActive(true);
-        startPanel.SetActive(false);
+        // If there is no cards yet go to the grid input panel
+        if(FindObjectsOfType<Card>().Length == 0)
+        {
+            paramPanel.SetActive(true);
+            startPanel.SetActive(false);
+        }
+        else //if there are already cards it means that the game is already loaded. So we can start it.
+
+        {
+            startPanel.SetActive(false);
+            pauseButton.SetActive(true);
+            GameManager.Instance.StartTimer();
+        }
+
+
 
     }
 
@@ -92,6 +107,8 @@ public class UIManager : MonoBehaviour
         if (gameData != null)
         {
             StartCoroutine(gridHandler.SetupGridFromSavedData(gameData.Rows, gameData.Columns, gameData.CardPositions));
+
+
             Debug.Log("Game Loaded");
         }
         else
@@ -125,6 +142,11 @@ public class UIManager : MonoBehaviour
     {
         paramPanel.SetActive(true);
         pausePanel.SetActive(false);
+    }
+
+    public void GoToMainMenu()
+    {
+        startPanel.SetActive(true);
     }
 
     public void UpdateScoreDisplay(int score)
