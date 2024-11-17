@@ -44,7 +44,6 @@ public class CardHandler : MonoBehaviour
             // Only check matches if the enqueued card count is divisible by 2 in order to check them in pairs. 
             if (flippedCards.Count % 2 == 0) 
             {
-                GameManager.Instance.UpdateTurnCount();
                 StartCoroutine(CheckMatch());
             }
         }
@@ -57,9 +56,15 @@ public class CardHandler : MonoBehaviour
         var firstCard = flippedCards.Dequeue();
         var secondCard = flippedCards.Dequeue();
 
+        // midpoint for the popup score text
+        Vector3 midpoint = (firstCard.transform.position + secondCard.transform.position) / 2;
+        // convert it to screen coordinates
+        Vector3 screenPosition = Camera.main.WorldToScreenPoint(midpoint);
+
 
         if (firstCard.id != secondCard.id)
         {
+            GameManager.Instance.addMishitInRow(); // used for penalty
             // No match, flip back
             firstCard.Flip();
             secondCard.Flip();
@@ -67,11 +72,10 @@ public class CardHandler : MonoBehaviour
         else
         {
             // Match found
+
+            GameManager.Instance.addHitsInRow(); // used for combo bonus
             Debug.Log("Match!");
-            // midpoint for the popup score text
-            Vector3 midpoint = (firstCard.transform.position + secondCard.transform.position) / 2;
-            // convert it to screen coordinates
-            Vector3 screenPosition = Camera.main.WorldToScreenPoint(midpoint);
+
             GameManager.Instance.UpdateHitCount(screenPosition);
 
             //particle effect at matching card positions
@@ -82,6 +86,8 @@ public class CardHandler : MonoBehaviour
             Destroy(secondCard.gameObject);
 
         }
+
+        GameManager.Instance.UpdateTurnCount(screenPosition);
     }
 
 

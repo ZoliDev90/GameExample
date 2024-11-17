@@ -18,6 +18,13 @@ public class GameManager : MonoBehaviour
     private int turnCount = 0;
     private int score = 0;
 
+    private int hitsInRow = 0; // this is for combo
+    private int mishitsInRow = 0; // this is for penalty
+
+    public int comboThreshold = 2; // After 2 hits in a row bonus points added
+    public int penaltyThreshold = 2; // After 2 mishits in a row penalty points deducted
+    public int baseReward = 10;
+
 
     void Awake()
     {
@@ -70,14 +77,33 @@ public class GameManager : MonoBehaviour
     {
         hitCount += 1;
         UIManager.Instance.UpdateHitsDisplay(hitCount);
-        UIManager.Instance.ShowScorePopup("+10", position, Color.green);
-        UpdateScore(10);
+        
+        if(hitsInRow >= comboThreshold)
+        {
+            int point = baseReward * hitsInRow;
+            UIManager.Instance.ShowScorePopup($"{hitsInRow}X Combo +{point}", position, Color.magenta);
+            UpdateScore(point);
+        }
+        else
+        {
+            UIManager.Instance.ShowScorePopup($"+{baseReward}", position, Color.green);
+            UpdateScore(baseReward);
+        }
+
+
     }
 
-    public void UpdateTurnCount()
+    public void UpdateTurnCount(Vector3 position)
     {
         turnCount += 1;
         UIManager.Instance.UpdateTurnsDisplay(turnCount);
+
+        if (mishitsInRow >= penaltyThreshold)
+        {
+            int point = baseReward / 2;
+            UIManager.Instance.ShowScorePopup($"-{point}", position, Color.red);
+            UpdateScore(-point);
+        }
     }
 
     public void ResetParameters()
@@ -86,10 +112,25 @@ public class GameManager : MonoBehaviour
         score = 0;
         hitCount = 0;
         turnCount = 0;
+        hitsInRow = 0;
+        mishitsInRow = 0;
         UIManager.Instance.UpdateScoreDisplay(score);
         UIManager.Instance.UpdateHitsDisplay(hitCount);
         UIManager.Instance.UpdateTurnsDisplay(turnCount);
     }
+
+    public void addMishitInRow() { 
+        mishitsInRow += 1;
+        hitsInRow = 0;
+    }
+    public void addHitsInRow() { 
+        hitsInRow += 1;
+        mishitsInRow = 0;
+    }
+    //public void resetMishitInRow() { mishitsInRow = 0; }
+    //public void resetHitsInRow() { hitsInRow = 0; }
+
+
 
     public void SaveGame(int rows, int columns)
     {
