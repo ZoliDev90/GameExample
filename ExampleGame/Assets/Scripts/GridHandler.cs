@@ -38,7 +38,7 @@ public class GridHandler : MonoBehaviour
     }
 
     
-    public void setupGrid(int gridRows, int gridColumns)
+    public void SetupGrid(int gridRows, int gridColumns)
     {
 
         int wider = Mathf.Max(gridRows, gridColumns);
@@ -64,6 +64,25 @@ public class GridHandler : MonoBehaviour
 
         ClearGrid();
         GenerateGrid();
+        AdjustCameraAndCardSize(); // Adjust camera and card size to fit any screen size
+        AssignImagesToCards(); //Assign images and uniqe keys to the cards
+    }
+
+    public IEnumerator SetupGridFromSavedData(int gridRows, int gridColumns, List<Vector3> cardPositions)
+    {
+        rows = gridRows;
+        columns = gridColumns;
+        ClearGrid();
+
+        //Instantiate and put the cards to the saved positions
+        for (int i = 0; i < cardPositions.Count; i++)
+        {
+            GameObject card = Instantiate(cardPrefab, cardPositions[i], Quaternion.identity);
+            card.transform.parent = this.transform;
+            cards.Add(card);
+            yield return new WaitForSeconds(0.1f);
+
+        }
         AdjustCameraAndCardSize();
         AssignImagesToCards();
     }

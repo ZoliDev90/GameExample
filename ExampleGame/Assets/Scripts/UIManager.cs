@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -54,7 +56,7 @@ public class UIManager : MonoBehaviour
                 GameManager.Instance.StartTimer();
                 paramPanel.SetActive(false);
                 pauseButton.SetActive(true);
-                gridHandler.setupGrid(gridWidth, gridHeight);
+                gridHandler.SetupGrid(gridWidth, gridHeight);
             }
             else
             {
@@ -68,7 +70,7 @@ public class UIManager : MonoBehaviour
 
     }
 
-    public void onPauseButtonClick()
+    public void OnPauseButtonClick()
     {
         pauseButton.SetActive(false);
         pausePanel.SetActive(true);
@@ -76,38 +78,50 @@ public class UIManager : MonoBehaviour
 
     }
 
-    public void onStartButtonClick()
+    public void OnStartButtonClick()
     {
         paramPanel.SetActive(true);
         startPanel.SetActive(false);
 
     }
 
-    public void onLoadButtonClick()
+    public void OnLoadButtonClick()
     {
+        GameData gameData = GameManager.Instance.LoadGame();
+
+        if (gameData != null)
+        {
+            StartCoroutine(gridHandler.SetupGridFromSavedData(gameData.Rows, gameData.Columns, gameData.CardPositions));
+            Debug.Log("Game Loaded");
+        }
+        else
+        {
+            Debug.Log("There is no saved game!");
+        }
+    }
+
+    public void OnSaveButtonClick()
+    {
+
+        GameManager.Instance.SaveGame(gridHandler.rows, gridHandler.columns);
+        Debug.Log("Game is saved");
 
     }
 
-    public void onSaveButtonClick()
-    {
-
-
-    }
-
-    public void onQuitButtonClick()
+    public void OnQuitButtonClick()
     {
         Debug.Log("Quit game requested.");
         Application.Quit();
     }
 
-    public void onResumeButtonClick()
+    public void OnResumeButtonClick()
     {
         pauseButton.SetActive(true);
         pausePanel.SetActive(false);
         GameManager.Instance.StartTimer();
     }
 
-    public void onRestartButtonClick()
+    public void OnRestartButtonClick()
     {
         paramPanel.SetActive(true);
         pausePanel.SetActive(false);
