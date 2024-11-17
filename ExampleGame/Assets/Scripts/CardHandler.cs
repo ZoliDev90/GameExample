@@ -100,6 +100,7 @@ public class CardHandler : MonoBehaviour
         gridHandler.getCards().Remove(card);  // This removes the reference from the list
         Destroy(card);
         
+        //if there is no more cards the game is over.
         if (gridHandler.getCards().Count == 0)
         {
             GameManager.Instance.WinGame();

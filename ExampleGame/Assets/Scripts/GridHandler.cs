@@ -134,7 +134,7 @@ public class GridHandler : MonoBehaviour
 
 
 
-    private void AdjustCameraAndCardSize()
+    private void AdjustCameraAndCardSize() // Adjust camera and card size to fit any screen size
     {
         Camera mainCamera = Camera.main;
 
@@ -172,12 +172,6 @@ public class GridHandler : MonoBehaviour
         gridHeight = (rows * cardHeight) + (spacing * (rows - 1));
     }
 
-    //public void UpdateGridSize(int newRows, int newColumns)
-    //{
-    //    rows = newRows;
-    //    columns = newColumns;
-    //    setupGrid();
-    //}
 
     void LoadCardImages()
     {

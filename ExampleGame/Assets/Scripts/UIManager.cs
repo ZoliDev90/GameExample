@@ -72,7 +72,7 @@ public class UIManager : MonoBehaviour
 
     }
 
-    public void OnPauseButtonClick()
+    public void OnPauseButtonClick() // this is the menu button at the top lef corner of the screen
     {
         pauseButton.SetActive(false);
         pausePanel.SetActive(true);
@@ -107,7 +107,6 @@ public class UIManager : MonoBehaviour
         if (gameData != null)
         {
             StartCoroutine(gridHandler.SetupGridFromSavedData(gameData.Rows, gameData.Columns, gameData.CardPositions));
-
 
             Debug.Log("Game Loaded");
         }
@@ -170,7 +169,7 @@ public class UIManager : MonoBehaviour
         timerText.text = FormatTime(elapsedTime);
     }
 
-    public void ShowScorePopup(string text, Vector3 position, Color textColor)
+    public void ShowScorePopup(string text, Vector3 position, Color textColor) // this is for the bonus pop up text
     {
         GameObject popup = Instantiate(scorePopupPrefab, position, Quaternion.identity, transform);
         ScorePopup scorePopup = popup.GetComponent<ScorePopup>();
