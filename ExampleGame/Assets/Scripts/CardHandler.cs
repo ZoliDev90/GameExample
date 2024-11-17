@@ -15,7 +15,7 @@ public class CardHandler : MonoBehaviour
     void Update()
     {
         // to block raycasting when the pointer is over UI element
-        if (EventSystem.current.IsPointerOverGameObject()) return;
+        if (IsPointerOverUIElement()) return;
 
         // Handle input for both desktop and mobile
         if (Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
@@ -34,6 +34,23 @@ public class CardHandler : MonoBehaviour
                 }
             }
         }
+    }
+
+    private bool IsPointerOverUIElement() //Check if the pointer is over ui element
+    {
+        // Check for desktop (mouse input)
+        if (Input.GetMouseButtonDown(0) && EventSystem.current.IsPointerOverGameObject())
+            return true;
+
+        // Check for mobile (touch input)
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            if (EventSystem.current.IsPointerOverGameObject(touch.fingerId))
+                return true;
+        }
+
+        return false;
     }
 
     public void FlipCard(Card cardToFlip)

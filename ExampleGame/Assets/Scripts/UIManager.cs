@@ -121,6 +121,8 @@ public class UIManager : MonoBehaviour
 
         GameManager.Instance.SaveGame(gridHandler.rows, gridHandler.columns);
         Debug.Log("Game is saved");
+        pausePanel.SetActive(false);
+
 
     }
 
