@@ -36,13 +36,15 @@ public class CardHandler : MonoBehaviour
 
     public void FlipCard(Card cardToFlip)
     {
-        if (!cardToFlip.isFlipped)
-        {
+        if (!cardToFlip.IsFlipped()) // flip only if it is not flipped
+        {  
             cardToFlip.Flip();
             flippedCards.Enqueue(cardToFlip);
 
-            if (flippedCards.Count % 2 == 0)
+            // Only check matches if the enqueued card count is divisible by 2 in order to check them in pairs. 
+            if (flippedCards.Count % 2 == 0) 
             {
+                GameManager.Instance.UpdateTurnCount();
                 StartCoroutine(CheckMatch());
             }
         }
@@ -66,8 +68,16 @@ public class CardHandler : MonoBehaviour
         {
             // Match found
             Debug.Log("Match!");
+            // midpoint for the popup score text
+            Vector3 midpoint = (firstCard.transform.position + secondCard.transform.position) / 2;
+            // convert it to screen coordinates
+            Vector3 screenPosition = Camera.main.WorldToScreenPoint(midpoint);
+            GameManager.Instance.UpdateHitCount(screenPosition);
+
+            //particle effect at matching card positions
             Instantiate(particles, firstCard.transform.position + Vector3.up, firstCard.transform.rotation);
             Instantiate(particles, secondCard.transform.position + Vector3.up, secondCard.transform.rotation);
+            //destroy the cards if they matched
             Destroy(firstCard.gameObject);
             Destroy(secondCard.gameObject);
 

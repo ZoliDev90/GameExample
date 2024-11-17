@@ -6,20 +6,15 @@ public class Card : MonoBehaviour
 {
 
     private bool isAnimating = false;
-    [HideInInspector]
-    public bool isFlipped = false;
+    private bool isFlipped = false;
     public int id;
 
 
-    void Awake()
+    public bool IsFlipped()
     {
+        return isFlipped;
     }
 
-    public void SetupCard(int value)
-    {
-        id = value;
-        isFlipped = false;
-    }
 
     public void Flip()
     {

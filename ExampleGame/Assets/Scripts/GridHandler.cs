@@ -23,10 +23,8 @@ public class GridHandler : MonoBehaviour
         backgroundTable = transform.GetChild(0);
         currentOrientation = Screen.orientation;
 
-
-
         LoadCardImages();
-        setupGrid(rows, columns);
+        //setupGrid(rows, columns);
     }
 
     void Update()
